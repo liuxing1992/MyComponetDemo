@@ -9,6 +9,7 @@ android {
 
     defaultConfig {
         if (isMainModule.toBoolean()) {
+            //组件模式 单独运行 要分配一个applicationId 这里默认全部一样为了一些第三方需要（微信分享要applicationId）
             applicationId rootProject.ext.android.applicationId
         }
     }
