@@ -1,0 +1,81 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.jakewharton.butterknife'
+android {
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+
+        //Arouter路由配置
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
+                includeCompileClasspath = true
+            }
+        }
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    //防止编译的时候oom、GC
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    //用api 依赖 可以把lib暴露给依赖者 implementation只给自己使用 不暴露出去
+    //androidX
+    api rootProject.ext.androidx["appcompat"]
+    api rootProject.ext.androidx["recyclerview"]
+    api rootProject.ext.androidx["design"]
+    api rootProject.ext.androidx["multidex"]
+    api rootProject.ext.androidx["annotation"]
+    api rootProject.ext.androidx["constraintlayout"]
+    //net
+    api rootProject.ext.dependencies["rxjava2"]
+    api rootProject.ext.dependencies["rxandroid2"]
+    api rootProject.ext.dependencies["retrofit"]
+    api rootProject.ext.dependencies["adapter-rxjava2"]
+    api rootProject.ext.dependencies["converter-gson"]
+    api rootProject.ext.dependencies["logging-interceptor"]
+    api rootProject.ext.dependencies["google-gson"]
+    //glide
+    api rootProject.ext.dependencies["glide"]
+    annotationProcessor rootProject.ext.dependencies["glide-compiler"]
+    //通过标签直接生成shape，无需再写shape.xml
+    api rootProject.ext.dependencies["backgroundlib"]
+    //状态栏
+    api rootProject.ext.dependencies["immersionbar"]
+    //recycleView适配器
+    api rootProject.ext.dependencies["baseAdapter"]
+    //内存泄漏检测
+    debugApi rootProject.ext.dependencies["leakcanary"]
+    releaseApi rootProject.ext.dependencies["leakcanary-no-op"]
+    //路由
+    annotationProcessor rootProject.ext.dependencies["arouter-compiler"]
+    api rootProject.ext.dependencies["arouter-api"]
+    //黄油刀
+    api rootProject.ext.dependencies["butterknife"]
+//    annotationProcessor rootProject.ext.dependencies["butterknife-compiler"]
+
+}

@@ -1,0 +1,2 @@
+include ':app', ':common_base', ':module_main'
+rootProject.name='MyComponetDemo'

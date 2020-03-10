@@ -1,0 +1,45 @@
+//各组件的公共部分
+//if (isModule.toBoolean()) {
+//    apply plugin: 'com.android.application'
+//} else {
+//    apply plugin: 'com.android.library'
+//}
+//apply from: "../module.build.gradle" 引用方式
+android {
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
+            }
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation project(':common_base')
+    //Arouter路由
+    annotationProcessor rootProject.ext.dependencies["arouter-compiler"]
+    //黄油刀
+    annotationProcessor rootProject.ext.dependencies["butterknife-compiler"]
+}
+

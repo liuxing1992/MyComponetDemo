@@ -1,0 +1,34 @@
+if (isMainModule.toBoolean()) {
+    apply plugin: 'com.android.application'
+} else {
+    apply plugin: 'com.android.library'
+}
+apply from: "../module.build.gradle"
+android {
+
+
+    defaultConfig {
+        if (isMainModule.toBoolean()) {
+            applicationId rootProject.ext.android.applicationId
+        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+            if (isMainModule.toBoolean()) {
+                manifest.srcFile 'src/main/module/AndroidManifest.xml'
+            } else {
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+                //集成模式下剔除
+                java {
+                    exclude 'debug/**'
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+
+}
