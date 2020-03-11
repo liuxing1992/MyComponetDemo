@@ -25,7 +25,7 @@ public abstract class MyObserver<T extends BaseResponse> implements Observer<T> 
     @Override
     public void onSubscribe(Disposable d) {
         //onstart 开始工作 可以判断些网络连接情况
-
+        onStart(d);
     }
 
     @Override
@@ -49,6 +49,10 @@ public abstract class MyObserver<T extends BaseResponse> implements Observer<T> 
 
 
     public abstract void onSuccess(T response);
+
+    public void onStart(Disposable d){
+
+    }
 
     public void onFail(T response) {
         //code 值不是成功的处理 比如未登录 参数错误等

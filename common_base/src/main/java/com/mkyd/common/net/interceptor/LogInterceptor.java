@@ -7,7 +7,7 @@ import okhttp3.Interceptor;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
- * Description:
+ * Description: 网络请求日志
  * Data：2020/3/10-15:55
  * Author: ly
  */

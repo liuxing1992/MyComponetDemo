@@ -14,7 +14,7 @@ import java.net.URLDecoder;
  */
 public class CodeFailException {
 
-    public static void handleCodeException(Context context , BaseResponse response){
+    public static <T extends BaseResponse> void handleCodeException(Context context , T response){
         if (response!=null){
             int code = response.getCode();
             try {

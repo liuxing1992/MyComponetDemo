@@ -79,6 +79,7 @@ dependencies {
     api rootProject.ext.dependencies["arouter-api"]
     //黄油刀
     api rootProject.ext.dependencies["butterknife"]
-//    annotationProcessor rootProject.ext.dependencies["butterknife-compiler"]
-
+    annotationProcessor rootProject.ext.dependencies["butterknife-compiler"]
+    //刷新
+    api rootProject.ext.dependencies["SmartRefreshLayout"]
 }

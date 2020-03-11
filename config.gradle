@@ -34,6 +34,9 @@ ext {
             "google-gson"         : "2.8.5",
 
 
+            "SmartRefreshLayout"  : "1.1.0",
+
+
     ]
 
     //androidX配置
@@ -70,7 +73,8 @@ ext {
             "rxlifecycle3"           : "com.trello.rxlifecycle3:rxlifecycle:${versions["rxlifecycle3"]}",
             "rxlifecycle3-android"   : "com.trello.rxlifecycle3:rxlifecycle-android:${versions["rxlifecycle3"]}",
             "rxlifecycle3-components": "com.trello.rxlifecycle3:rxlifecycle-components:${versions["rxlifecycle3"]}",
-
+            //view
+            "SmartRefreshLayout"     : "com.scwang.smartrefresh:SmartRefreshLayout:${versions["SmartRefreshLayout"]}",
 
     ]
 }
