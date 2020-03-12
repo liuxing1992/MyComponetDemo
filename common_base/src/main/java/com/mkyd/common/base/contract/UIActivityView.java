@@ -39,6 +39,8 @@ public interface UIActivityView {
 
     int titleColor();
 
+    int getBackImgRes();
+
     void addTitleAction(TitleBarLayout.Action action);
 
     //真实的view layout
@@ -46,5 +48,7 @@ public interface UIActivityView {
 
     void setDivideLine(boolean visible);
 
-    Activity getActiivty();
+    Activity getActivity();
+
+    void  onBackImageClick();
 }

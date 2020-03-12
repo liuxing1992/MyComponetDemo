@@ -26,7 +26,7 @@ public abstract class BaseActivity<P extends BaseMvpPresent> extends RxAppCompat
         super.onCreate(savedInstanceState);
         if (layoutResID() != 0) {
             setContentView(layoutResID());
-            //绑定到butterknife 有个坑
+            //绑定到butterknife
             mUnbinder = ButterKnife.bind(this);
             mPresent = getPresent();
             init();

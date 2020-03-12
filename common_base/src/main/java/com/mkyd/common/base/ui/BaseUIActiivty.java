@@ -15,6 +15,9 @@ import com.mkyd.common.base.contract.UIActivityView;
 import com.mkyd.common.base.mvp.BaseMvpPresent;
 import com.mkyd.common.base.mvp.BaseMvpView;
 import com.mkyd.common.constant.AppConstant;
+import com.mkyd.common.stateview.OnNetworkListener;
+import com.mkyd.common.stateview.OnRetryListener;
+import com.mkyd.common.stateview.StateLayoutManager;
 import com.mkyd.common.widget.TitleBarLayout;
 import com.mkyd.common_base.R;
 
@@ -23,15 +26,15 @@ import com.mkyd.common_base.R;
  * Data：2020/3/11-10:36
  * Author: ly
  */
-public abstract class BaseUIActiivty< P extends BaseMvpPresent> extends BaseActivity<P> implements UIActivityView, BaseMvpView, ViewTreeObserver.OnGlobalLayoutListener {
-
+public abstract class BaseUIActiivty<P extends BaseMvpPresent> extends BaseActivity<P> implements UIActivityView, BaseMvpView, ViewTreeObserver.OnGlobalLayoutListener {
 
     protected TitleBarLayout titleBar;
     protected FrameLayout flContainer;
     private LinearLayout llTitleLayout;
-    private View divideLine ;
+    private View divideLine;
     private ImmersionBar mImmersionBar;
 
+    protected StateLayoutManager mStateLayoutManager;
 
     @Override
     public int layoutResID() {
@@ -62,6 +65,8 @@ public abstract class BaseUIActiivty< P extends BaseMvpPresent> extends BaseActi
         }
         //标题
         initTitleBar();
+        //多状态
+        initStatusViewLayout();
         initView();
         initData();
     }
@@ -98,7 +103,7 @@ public abstract class BaseUIActiivty< P extends BaseMvpPresent> extends BaseActi
     public void initTitleBar() {
         titleBar.setTitle(getBarTitle());
         titleBar.setTitleSize(AppConstant.APP_TITLE_TEXT_SIZE);
-//        titleBar.setLeftImageResource(); 返回图标
+        titleBar.setLeftImageResource(getBackImgRes());
         titleBar.setTitleColor(titleColor());
         if (backGroundDrawable() == null) {
             llTitleLayout.setBackgroundColor(backGroundColor());
@@ -108,7 +113,7 @@ public abstract class BaseUIActiivty< P extends BaseMvpPresent> extends BaseActi
         titleBar.setLeftClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                onBackImageClick();
             }
         });
     }
@@ -135,27 +140,48 @@ public abstract class BaseUIActiivty< P extends BaseMvpPresent> extends BaseActi
 
     @Override
     public void setDivideLine(boolean visible) {
-        divideLine.setVisibility(visible? View.VISIBLE : View.GONE );
+        divideLine.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     @Override
     public void showLoadingLayout() {
-
+        if (mStateLayoutManager != null)
+            mStateLayoutManager.showLoading();
     }
 
     @Override
     public void showContentLayout() {
-
+        if (mStateLayoutManager != null)
+            mStateLayoutManager.showContent();
     }
 
     @Override
     public void showNetErrorLayout() {
+        if (mStateLayoutManager != null)
+            mStateLayoutManager.showNetWorkError();
+    }
 
+    @Override
+    public void showEmptyLayout() {
+        showEmptyLayout(0, "");
     }
 
     @Override
     public void showEmptyLayout(String emptyTip) {
+        showEmptyLayout(0, emptyTip);
+    }
 
+
+    @Override
+    public void showEmptyLayout(int emptyImgID, String emptyTip) {
+        if (mStateLayoutManager != null)
+            mStateLayoutManager.showEmptyData(emptyImgID, emptyTip);
+    }
+
+    @Override
+    public void showErrorLayout() {
+        if (mStateLayoutManager != null)
+            mStateLayoutManager.showError();
     }
 
     @Override
@@ -164,12 +190,81 @@ public abstract class BaseUIActiivty< P extends BaseMvpPresent> extends BaseActi
     }
 
     @Override
-    public void onGlobalLayout() {
+    public void onNetWorkErrorClick() {
 
     }
 
     @Override
-    public Activity getActiivty() {
+    public void onGlobalLayout() {
+
+    }
+
+
+    @Override
+    public void initStatusViewLayout() {
+        mStateLayoutManager = StateLayoutManager.newBuilder(this)
+                .contentView(contentViewID())
+                .emptyDataView(emptyViewID())
+                .netWorkErrorView(netWorkErrorViewID())
+                .errorView(errorViewID())
+                .loadingView(loadingViewID())
+                //设置空数据页面图片控件id
+                .emptyDataIconImageId(R.id.ivEmpty)
+                //设置空数据页面文本控件id
+                .emptyDataTextTipId(R.id.tvEmptyTip)
+                .onRetryListener(new OnRetryListener() {
+                    @Override
+                    public void onRetry() {
+                        //加载异常error
+                        onReloadClick();
+                    }
+                })
+                .onNetworkListener(new OnNetworkListener() {
+                    @Override
+                    public void onNetwork() {
+                        onNetWorkErrorClick();
+                    }
+                })
+                .build();
+    }
+
+    @Override
+    public int contentViewID() {
+        return getContentViewId();
+    }
+
+    @Override
+    public int emptyViewID() {
+        return R.layout.view_empty;
+    }
+
+    @Override
+    public int loadingViewID() {
+        return R.layout.view_loading;
+    }
+
+    @Override
+    public int netWorkErrorViewID() {
+        return R.layout.view_net_error;
+    }
+
+    @Override
+    public int errorViewID() {
+        return R.layout.view_error;
+    }
+
+    @Override
+    public Activity getActivity() {
         return this;
+    }
+
+    @Override
+    public void onBackImageClick() {
+        finish();
+    }
+
+    @Override
+    public int getBackImgRes() {
+        return R.drawable.icon_black_back;
     }
 }

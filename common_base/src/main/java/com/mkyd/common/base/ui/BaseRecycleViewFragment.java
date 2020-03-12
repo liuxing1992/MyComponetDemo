@@ -26,13 +26,13 @@ import java.util.List;
 import butterknife.BindView;
 
 /**
- * Description:公共的带刷新的RecyclerView
- * Data：2020/3/11-14:57
+ * Description: 针对页面是recyclerview
+ * SmartRefreshLayout刷新
+ * BaseQuickAdapter 加载更多
+ * Data：2020/3/12-15:51
  * Author: ly
- * todo 组件化butterknife要用R2.id
  */
-public abstract class BaseRecyclerViewActivity<T, P extends BaseMvpPresent> extends BaseUIActiivty<P> implements IRecyclerView<T>
-        , OnItemChildClickListener, OnItemClickListener, OnRefreshListener, OnLoadMoreListener {
+public abstract class BaseRecycleViewFragment<T, P extends BaseMvpPresent> extends BaseLazyFragment<P> implements IRecyclerView<T>, OnItemClickListener, OnItemChildClickListener, OnRefreshListener, OnLoadMoreListener {
 
     @BindView(R2.id.refreshLayout)
     SmartRefreshLayout mRefreshLayout;
@@ -42,18 +42,18 @@ public abstract class BaseRecyclerViewActivity<T, P extends BaseMvpPresent> exte
     private int pageNo;
 
     @Override
-    public int getContentViewId() {
+    protected int getContentLayoutID() {
         return R.layout.activity_base_recycler;
     }
 
     @Override
-    public void initView() {
+    protected void initView() {
         mAdapter = getAdapter();
         if (getReHeaderViewID() != 0) {
-            mAdapter.addHeaderView(LayoutInflater.from(this).inflate(getReHeaderViewID(), null, false));
+            mAdapter.addHeaderView(LayoutInflater.from(getActivity()).inflate(getReHeaderViewID(), null, false));
         }
         if (getReFooterViewID() != 0) {
-            mAdapter.addFooterView(LayoutInflater.from(this).inflate(getReFooterViewID(), null, false));
+            mAdapter.addFooterView(LayoutInflater.from(getActivity()).inflate(getReFooterViewID(), null, false));
         }
         mAdapter.setOnItemClickListener(this);
         mAdapter.setOnItemChildClickListener(this);
@@ -121,6 +121,7 @@ public abstract class BaseRecyclerViewActivity<T, P extends BaseMvpPresent> exte
         return null;
     }
 
+
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         pageNo = 0;
@@ -135,7 +136,6 @@ public abstract class BaseRecyclerViewActivity<T, P extends BaseMvpPresent> exte
         onDataLoadMore();
     }
 
-
     @Override
     public void refreshUI(List<T> data) {
         mRefreshLayout.finishRefresh();
@@ -147,8 +147,6 @@ public abstract class BaseRecyclerViewActivity<T, P extends BaseMvpPresent> exte
                 //数据空
                 if (getReHeaderViewID() == 0 && getReHeaderViewID() == 0) {
                     showEmptyLayout("");
-                }else {
-                    showContentLayout();
                 }
             } else {
                 //数据不为空
@@ -199,5 +197,5 @@ public abstract class BaseRecyclerViewActivity<T, P extends BaseMvpPresent> exte
     public void onItemClick(@NonNull BaseQuickAdapter adapter, @NonNull View view, int position) {
 
     }
-
 }
+

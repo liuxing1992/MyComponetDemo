@@ -7,10 +7,35 @@ package com.mkyd.common.base.mvp;
  */
 public interface BaseMvpView {
 
+
+    void initStatusViewLayout();
+
     void showLoadingLayout();
+
     void showContentLayout();
+
     void showNetErrorLayout();
+
+    void showEmptyLayout();
+
     void showEmptyLayout(String emptyTip);
+
+    void showEmptyLayout(int emptyImgID, String emptyTip);
+
+    void showErrorLayout();
+
     void onReloadClick();
+
+    void onNetWorkErrorClick();
+
+    int contentViewID();
+
+    int emptyViewID();
+
+    int errorViewID();
+
+    int netWorkErrorViewID();
+
+    int loadingViewID();
 
 }

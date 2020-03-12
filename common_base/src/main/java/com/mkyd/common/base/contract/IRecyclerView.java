@@ -35,9 +35,9 @@ public interface IRecyclerView<T> {
     boolean enableLoadMore();
 
 
-    int getReHeaderView();
+    int getReHeaderViewID();
 
-    int getReFooterView();
+    int getReFooterViewID();
 
     /**
      *  新版的adapter框架 adapter是要实现LoadMoreModule接口才行

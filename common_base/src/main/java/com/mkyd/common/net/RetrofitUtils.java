@@ -36,7 +36,7 @@ public class RetrofitUtils {
     }
 
 
-    public ApiService getRetrofit(){
+    private ApiService getRetrofit(){
         ApiService apiService = initRetrofit(initOkHttp()).create(ApiService.class);
         return apiService ;
     }

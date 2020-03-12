@@ -1,5 +1,7 @@
 package com.mkyd.module.main;
 
+import android.os.Handler;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,12 +45,20 @@ public class MainActivity extends BaseRecyclerViewActivity<String, TestPrsent> i
 
     @Override
     public RecyclerView.LayoutManager getLayoutManager() {
-        return new LinearLayoutManager(getActiivty());
+        return new LinearLayoutManager(getActivity());
     }
+
 
     @Override
     public void initData() {
-
+        System.out.println("-----initView");
+        showLoadingLayout();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                onDataRefresh();
+            }
+        },1000);
     }
 
     @Override
