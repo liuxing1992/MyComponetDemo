@@ -37,7 +37,7 @@ public abstract class BaseActivity<P extends BaseMvpPresent> extends RxAppCompat
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mUnbinder != null && mUnbinder != Unbinder.EMPTY)
+        if (mUnbinder != null )
             mUnbinder.unbind();
         if (mPresent != null)
             mPresent.onDestroy();

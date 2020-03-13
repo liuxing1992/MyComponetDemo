@@ -29,7 +29,6 @@ import butterknife.BindView;
  * Description:公共的带刷新的RecyclerView
  * Data：2020/3/11-14:57
  * Author: ly
- * todo 组件化butterknife要用R2.id
  */
 public abstract class BaseRecyclerViewActivity<T, P extends BaseMvpPresent> extends BaseUIActiivty<P> implements IRecyclerView<T>
         , OnItemChildClickListener, OnItemClickListener, OnRefreshListener, OnLoadMoreListener {
@@ -146,7 +145,7 @@ public abstract class BaseRecyclerViewActivity<T, P extends BaseMvpPresent> exte
             if (data.size() == 0) {
                 //数据空
                 if (getReHeaderViewID() == 0 && getReHeaderViewID() == 0) {
-                    showEmptyLayout("");
+                    showEmptyLayout();
                 }else {
                     showContentLayout();
                 }
@@ -155,6 +154,7 @@ public abstract class BaseRecyclerViewActivity<T, P extends BaseMvpPresent> exte
                 if (data.size() < AppConstant.PAGE_SIZE) {
                     mAdapter.getLoadMoreModule().loadMoreEnd(true);
                 }
+                showContentLayout();
             }
         }
         if (mAdapter.getLoadMoreModule() != null)

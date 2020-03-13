@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.drawable.Drawable;
 
 import com.gyf.immersionbar.ImmersionBar;
+import com.mkyd.common.base.mvp.BaseMvpView;
 import com.mkyd.common.widget.TitleBarLayout;
 
 /**
@@ -11,7 +12,7 @@ import com.mkyd.common.widget.TitleBarLayout;
  * Data：2020/3/11-11:26
  * Author: ly
  */
-public interface UIActivityView {
+public interface IActivityView {
 
     //沉浸式开启
     boolean isStatusBarEnabled();

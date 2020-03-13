@@ -1,7 +1,10 @@
 package com.mkyd.module.main;
 
+import android.content.Intent;
 import android.os.Handler;
+import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -10,6 +13,7 @@ import com.chad.library.adapter.base.module.LoadMoreModule;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.mkyd.common.base.ui.BaseRecyclerViewActivity;
 import com.mkyd.common.test.TestContract;
+import com.mkyd.common.test.TestFragmentActivity;
 import com.mkyd.common.test.TestPrsent;
 
 public class MainActivity extends BaseRecyclerViewActivity<String, TestPrsent> implements TestContract.TestView<String> {
@@ -51,14 +55,13 @@ public class MainActivity extends BaseRecyclerViewActivity<String, TestPrsent> i
 
     @Override
     public void initData() {
-        System.out.println("-----initView");
         showLoadingLayout();
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 onDataRefresh();
             }
-        },1000);
+        }, 1000);
     }
 
     @Override
@@ -83,5 +86,8 @@ public class MainActivity extends BaseRecyclerViewActivity<String, TestPrsent> i
         }
     }
 
-
+    @Override
+    public void onItemClick(@NonNull BaseQuickAdapter adapter, @NonNull View view, int position) {
+        startActivity(new Intent(this , TestFragmentActivity.class));
+    }
 }

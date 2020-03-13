@@ -82,4 +82,6 @@ dependencies {
     annotationProcessor rootProject.ext.dependencies["butterknife-compiler"]
     //刷新
     api rootProject.ext.dependencies["SmartRefreshLayout"]
+    //状态切换
+    api rootProject.ext.dependencies["loadSir"]
 }

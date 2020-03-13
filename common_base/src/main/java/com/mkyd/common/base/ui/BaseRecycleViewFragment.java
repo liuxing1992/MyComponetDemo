@@ -46,6 +46,7 @@ public abstract class BaseRecycleViewFragment<T, P extends BaseMvpPresent> exten
         return R.layout.activity_base_recycler;
     }
 
+
     @Override
     protected void initView() {
         mAdapter = getAdapter();

@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.animation.BaseAnimation;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
+import com.mkyd.common.base.mvp.BaseMvpView;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  * Data：2020/3/11-15:13
  * Author: ly
  */
-public interface IRecyclerView<T> {
+public interface IRecyclerView<T> extends BaseMvpView {
 
     int getPageNo() ;
 

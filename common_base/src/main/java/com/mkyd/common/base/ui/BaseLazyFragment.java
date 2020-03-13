@@ -112,8 +112,6 @@ public abstract class BaseLazyFragment<P extends BaseMvpPresent> extends BaseFra
 
     }
 
-    //初始化控件
-    protected abstract void initView();
 
     //初始化数据
     protected abstract void initData();

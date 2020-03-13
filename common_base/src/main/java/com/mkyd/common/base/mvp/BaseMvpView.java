@@ -28,14 +28,5 @@ public interface BaseMvpView {
 
     void onNetWorkErrorClick();
 
-    int contentViewID();
-
-    int emptyViewID();
-
-    int errorViewID();
-
-    int netWorkErrorViewID();
-
-    int loadingViewID();
 
 }

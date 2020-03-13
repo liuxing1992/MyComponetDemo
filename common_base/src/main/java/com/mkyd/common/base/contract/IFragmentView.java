@@ -10,7 +10,7 @@ import com.mkyd.common.widget.TitleBarLayout;
  * Data：2020/3/12-14:04
  * Author: ly
  */
-public interface IFragmentView  extends BaseMvpView {
+public interface IFragmentView  {
 
     boolean enableTitle();
 

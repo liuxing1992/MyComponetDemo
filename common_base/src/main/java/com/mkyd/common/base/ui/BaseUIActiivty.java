@@ -1,32 +1,42 @@
 package com.mkyd.common.base.ui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
 import com.gyf.immersionbar.ImmersionBar;
-import com.mkyd.common.base.contract.UIActivityView;
+import com.kingja.loadsir.callback.Callback;
+import com.kingja.loadsir.callback.SuccessCallback;
+import com.kingja.loadsir.core.LoadService;
+import com.kingja.loadsir.core.LoadSir;
+import com.kingja.loadsir.core.Transport;
+import com.mkyd.common.base.contract.IActivityView;
+import com.mkyd.common.base.contract.IStatusView;
 import com.mkyd.common.base.mvp.BaseMvpPresent;
 import com.mkyd.common.base.mvp.BaseMvpView;
 import com.mkyd.common.constant.AppConstant;
-import com.mkyd.common.stateview.OnNetworkListener;
-import com.mkyd.common.stateview.OnRetryListener;
-import com.mkyd.common.stateview.StateLayoutManager;
 import com.mkyd.common.widget.TitleBarLayout;
 import com.mkyd.common_base.R;
+
+import butterknife.ButterKnife;
 
 /**
  * Description: todo 页面状态没完成
  * Data：2020/3/11-10:36
  * Author: ly
  */
-public abstract class BaseUIActiivty<P extends BaseMvpPresent> extends BaseActivity<P> implements UIActivityView, BaseMvpView, ViewTreeObserver.OnGlobalLayoutListener {
+public abstract class BaseUIActiivty<P extends BaseMvpPresent> extends BaseActivity<P> implements IActivityView, BaseMvpView, IStatusView,ViewTreeObserver.OnGlobalLayoutListener {
 
     protected TitleBarLayout titleBar;
     protected FrameLayout flContainer;
@@ -34,7 +44,7 @@ public abstract class BaseUIActiivty<P extends BaseMvpPresent> extends BaseActiv
     private View divideLine;
     private ImmersionBar mImmersionBar;
 
-    protected StateLayoutManager mStateLayoutManager;
+    protected LoadService mBaseLoadService;
 
     @Override
     public int layoutResID() {
@@ -145,43 +155,56 @@ public abstract class BaseUIActiivty<P extends BaseMvpPresent> extends BaseActiv
 
     @Override
     public void showLoadingLayout() {
-        if (mStateLayoutManager != null)
-            mStateLayoutManager.showLoading();
+        System.out.println("----showLoadingLayout");
+       mBaseLoadService.showCallback(getLoadingStatus().getClass());
     }
 
     @Override
     public void showContentLayout() {
-        if (mStateLayoutManager != null)
-            mStateLayoutManager.showContent();
+        System.out.println("----showContentLayout");
+       mBaseLoadService.showSuccess();
     }
 
     @Override
     public void showNetErrorLayout() {
-        if (mStateLayoutManager != null)
-            mStateLayoutManager.showNetWorkError();
+        System.out.println("----showNetErrorLayout");
+        mBaseLoadService.showCallback(getNetErrorStatus().getClass());
     }
 
     @Override
     public void showEmptyLayout() {
-        showEmptyLayout(0, "");
+        showEmptyLayout(0,"");
     }
 
     @Override
     public void showEmptyLayout(String emptyTip) {
-        showEmptyLayout(0, emptyTip);
+        showEmptyLayout(0 , emptyTip);
     }
 
 
     @Override
     public void showEmptyLayout(int emptyImgID, String emptyTip) {
-        if (mStateLayoutManager != null)
-            mStateLayoutManager.showEmptyData(emptyImgID, emptyTip);
+        mBaseLoadService.setCallBack(getEmptyStatus().getClass(), new Transport() {
+            @Override
+            public void order(Context context, View view) {
+                //notice 空布局id全部要一样 tvEmptyTip ivEmpty
+                TextView tvEmpty = view.findViewById(R.id.tvEmptyTip);
+                if (tvEmpty==null) return;
+                if (!TextUtils.isEmpty(emptyTip)){
+                    tvEmpty.setText(emptyTip);
+                }
+                ImageView ivEmpty = view.findViewById(R.id.ivEmpty);
+                if (ivEmpty==null) return;
+                if (emptyImgID>0)
+                    ivEmpty.setImageResource(emptyImgID);
+            }
+        });
+        mBaseLoadService.showCallback(getEmptyStatus().getClass());
     }
 
     @Override
     public void showErrorLayout() {
-        if (mStateLayoutManager != null)
-            mStateLayoutManager.showError();
+        mBaseLoadService.showCallback(getErrorStatus().getClass());
     }
 
     @Override
@@ -202,56 +225,20 @@ public abstract class BaseUIActiivty<P extends BaseMvpPresent> extends BaseActiv
 
     @Override
     public void initStatusViewLayout() {
-        mStateLayoutManager = StateLayoutManager.newBuilder(this)
-                .contentView(contentViewID())
-                .emptyDataView(emptyViewID())
-                .netWorkErrorView(netWorkErrorViewID())
-                .errorView(errorViewID())
-                .loadingView(loadingViewID())
-                //设置空数据页面图片控件id
-                .emptyDataIconImageId(R.id.ivEmpty)
-                //设置空数据页面文本控件id
-                .emptyDataTextTipId(R.id.tvEmptyTip)
-                .onRetryListener(new OnRetryListener() {
-                    @Override
-                    public void onRetry() {
-                        //加载异常error
-                        onReloadClick();
-                    }
-                })
-                .onNetworkListener(new OnNetworkListener() {
-                    @Override
-                    public void onNetwork() {
-                        onNetWorkErrorClick();
-                    }
-                })
-                .build();
+        LoadSir.Builder builder = new LoadSir.Builder()
+                .addCallback(getLoadingStatus())
+                .addCallback(getEmptyStatus())
+                .addCallback(getNetErrorStatus())
+                .addCallback(getErrorStatus());
+        mBaseLoadService = builder.build().register(flContainer, new Callback.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+                Toast.makeText(getActivity() , "reload" , Toast.LENGTH_SHORT).show();
+            }
+        });
+        mBaseLoadService.showSuccess();
     }
 
-    @Override
-    public int contentViewID() {
-        return getContentViewId();
-    }
-
-    @Override
-    public int emptyViewID() {
-        return R.layout.view_empty;
-    }
-
-    @Override
-    public int loadingViewID() {
-        return R.layout.view_loading;
-    }
-
-    @Override
-    public int netWorkErrorViewID() {
-        return R.layout.view_net_error;
-    }
-
-    @Override
-    public int errorViewID() {
-        return R.layout.view_error;
-    }
 
     @Override
     public Activity getActivity() {

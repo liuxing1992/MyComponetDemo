@@ -26,7 +26,7 @@ public class TestPrsent extends BaseMvpPresent<TestContract.TestView<String>> im
     public void fresh() {
 
         if (count==0){
-            mvpView.refreshUI(getList(0));
+            mvpView.refreshUI(getList(1));
         }else if (count==1){
             mvpView.refreshUI(getList(2));
         }else if (count==2){
